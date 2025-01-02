@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Évaluation de Français</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #f5f5f5;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #3a3a3a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        input {
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #results {
+            margin-top: 20px;
+            background-color: #444;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #results p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <h1>Évaluation de Français</h1>
+    <div class="container">
+        <!-- Nom de l'élève -->
+        <div class="section">
+            <label for="studentName">Nom de l'élève :</label>
+            <input type="text" id="studentName" placeholder="Entrez le nom de l'élève">
+        </div>
+
+        <!-- Introduction -->
+        <h2>Introduction</h2>
+        <div class="section" id="introduction">
+            <label>Amorce (3 points) :</label>
+            <input type="number" id="intro_amorce" min="0" max="3" value="0">
+            <label>Situation de l’extrait (3 points) :</label>
+            <input type="number" id="intro_situation" min="0" max="3" value="0">
+            <label>Problématique (2 points) :</label>
+            <input type="number" id="intro_problematique" min="0" max="2" value="0">
+            <label>Annonce du plan (3 points) :</label>
+            <input type="number" id="intro_plan" min="0" max="3" value="0">
+            <label>Structure (3 points) :</label>
+            <input type="number" id="intro_structure" min="0" max="3" value="0">
+            <label>Transition (2 points) :</label>
+            <input type="number" id="intro_transition" min="0" max="2" value="0">
+            <label>Style (4 points) :</label>
+            <input type="number" id="intro_style" min="0" max="4" value="0">
+            <label>Remarques :</label>
+            <textarea id="intro_remarks" placeholder="Remarques pour l'introduction"></textarea>
+        </div>
+
+        <!-- Conclusion -->
+        <h2>Conclusion</h2>
+        <div class="section" id="conclusion">
+            <label>Résumé du plan (3 points) :</label>
+            <input type="number" id="concl_resume" min="0" max="3" value="0">
+            <label>Problématique (3 points) :</label>
+            <input type="number" id="concl_problematique" min="0" max="3" value="0">
+            <label>Ouverture (4 points) :</label>
+            <input type="number" id="concl_ouverture" min="0" max="4" value="0">
+            <label>Structure (3 points) :</label>
+            <input type="number" id="concl_structure" min="0" max="3" value="0">
+            <label>Transition (3 points) :</label>
+            <input type="number" id="concl_transition" min="0" max="3" value="0">
+            <label>Style (4 points) :</label>
+            <input type="number" id="concl_style" min="0" max="4" value="0">
+            <label>Remarques :</label>
+            <textarea id="concl_remarks" placeholder="Remarques pour la conclusion"></textarea>
+        </div>
+
+        <!-- Orthographe -->
+        <h2>Orthographe</h2>
+        <div class="section">
+            <label>Nombre de mots :</label>
+            <input type="number" id="wordCount" min="0" placeholder="Entrez le nombre de mots">
+            <label>Nombre de fautes :</label>
+            <input type="number" id="faultCount" min="0" placeholder="Entrez le nombre de fautes">
+        </div>
+
+        <!-- Boutons -->
+        <button onclick="calculateResults()">Calculer</button>
+        <button onclick="generatePDF()">Générer le PDF</button>
+
+        <!-- Résultats -->
+        <div id="results" style="display: none;">
+            <p id="orthographyScore"></p>
+            <p id="finalScore"></p>
+        </div>
+    </div>
+
+    <script>
+        function calculateOrthographyPoints(faults, words) {
+            if (words === 0) return 0;
+            const faultsPer200 = Math.floor((faults / words) * 200);
+            if (faultsPer200 <= 1) return 10;
+            if (faultsPer200 <= 3) return 9;
+            if (faultsPer200 <= 5) return 8;
+            if (faultsPer200 <= 7) return 7;
+            if (faultsPer200 <= 9) return 6;
+            if (faultsPer200 <= 11) return 5;
+            if (faultsPer200 <= 13) return 4;
+            if (faultsPer200 <= 15) return 3;
+            if (faultsPer200 <= 17) return 2;
+            if (faultsPer200 <= 19) return 1;
+            return 0;
+        }
+
+        function calculateResults() {
+            // Récupération des valeurs
+            const introPoints = [
+                "intro_amorce", "intro_situation", "intro_problematique",
+                "intro_plan", "intro_structure", "intro_transition", "intro_style"
+            ].reduce((sum, id) => sum + parseInt(document.getElementById(id).value) || 0, 0);
+
+            const conclPoints = [
+                "concl_resume", "concl_problematique", "concl_ouverture",
+                "concl_structure", "concl_transition", "concl_style"
+            ].reduce((sum, id) => sum + parseInt(document.getElementById(id).value) || 0, 0);
+
+            const words = parseInt(document.getElementById("wordCount").value) || 0;
+            const faults = parseInt(document.getElementById("faultCount").value) || 0;
+            const ortho_points = calculateOrthographyPoints(faults, words);
+
+            const total_points = introPoints + conclPoints + ortho_points;
+            const final_score = ((total_points / 50) * 5) + 1;
+
+            // Affichage des résultats
+            document.getElementById("orthographyScore").textContent = `Points d'orthographe : ${ortho_points} / 10`;
+            document.getElementById("finalScore").textContent = `Note finale : ${final_score.toFixed(2)} / 6`;
+            document.getElementById("results").style.display = "block";
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const name = document.getElementById("studentName").value || "Élève";
+
+            const introPoints = [
+                { label: "Amorce", max: 3, value: document.getElementById("intro_amorce").value || 0 },
+                { label: "Situation", max: 3, value: document.getElementById("intro_situation").value || 0 },
+                { label: "Problématique", max: 2, value: document.getElementById("intro_problematique").value || 0 },
+                { label: "Annonce du plan", max: 3, value: document.getElementById("intro_plan").value || 0 },
+                { label: "Structure", max: 3, value: document.getElementById("intro_structure").value || 0 },
+                { label: "Transition", max: 2, value: document.getElementById("intro_transition").value || 0 },
+                { label: "Style", max: 4, value: document.getElementById("intro_style").value || 0 }
+            ];
+
+            const conclPoints = [
+                { label: "Résumé du plan", max: 3, value: document.getElementById("concl_resume").value || 0 },
+                { label: "Problématique", max: 3, value: document.getElementById("concl_problematique").value || 0 },
+                { label: "Ouverture", max: 4, value: document.getElementById("concl_ouverture").value || 0 },
+                { label: "Structure", max: 3, value: document.getElementById("concl_structure").value || 0 },
+                { label: "Transition", max: 3, value: document.getElementById("concl_transition").value || 0 },
+                { label: "Style", max: 4, value: document.getElementById("concl_style").value || 0 }
+            ];
+
+            const words = parseInt(document.getElementById("wordCount").value) || 0;
+            const faults = parseInt(document.getElementById("faultCount").value) || 0;
+            const ortho_points = calculateOrthographyPoints(faults, words);
+
+            const total_points =
+                introPoints.reduce((sum, item) => sum + parseInt(item.value), 0) +
+                conclPoints.reduce((sum, item) => sum + parseInt(item.value), 0) +
+                ortho_points;
+            const final_score = ((total_points / 50) * 5) + 1;
+
+            // Titre
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text(`Évaluation de français de ${name}`, 15, 20);
+
+            // Note finale
+            doc.setFontSize(14);
+            doc.text(`Note finale : ${final_score.toFixed(2)} / 6`, 15, 30);
+
+            // Tableaux des résultats
+            doc.autoTable({
+                startY: 40,
+                head: [['Section', 'Points obtenus', 'Points maximums']],
+                body: introPoints.map(item => [item.label, item.value, item.max])
+                    .concat(conclPoints.map(item => [item.label, item.value, item.max]))
+                    .concat([['Orthographe', ortho_points, '10']])
+            });
+
+            // Barème pour l'orthographe
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 10,
+                head: [['Fautes / 200 mots', 'Points']],
+                body: [
+                    ['0-1', '10'],
+                    ['2-3', '9'],
+                    ['4-5', '8'],
+                    ['6-7', '7'],
+                    ['8-9', '6'],
+                    ['10-11', '5'],
+                    ['12-13', '4'],
+                    ['14-15', '3'],
+                    ['16-17', '2'],
+                    ['18-19', '1'],
+                    ['20 ou plus', '0']
+                ]
+            });
+
+            // Remarques
+            doc.text("Remarques pour l'introduction :", 15, doc.lastAutoTable.finalY + 20);
+            doc.text(document.getElementById("intro_remarks").value || "Aucune remarque", 15, doc.lastAutoTable.finalY + 30);
+
+            doc.text("Remarques pour la conclusion :", 15, doc.lastAutoTable.finalY + 50);
+            doc.text(document.getElementById("concl_remarks").value || "Aucune remarque", 15, doc.lastAutoTable.finalY + 60);
+
+            // Sauvegarde du PDF
+            doc.save(`Evaluation_${name}.pdf`);
+        }
+    </script>
+</body>
+</html>

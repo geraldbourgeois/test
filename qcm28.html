@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM de Français</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282828;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: orange;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .answer {
+            background-color: #444;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid orange;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .answer.selected {
+            background-color: #87CEEB;
+            color: black;
+        }
+        .progress {
+            margin: 20px 0;
+        }
+        .btn {
+            background-color: orange;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QCM de Français</h1>
+        <div id="student-name-section">
+            <input type="text" id="student-name" placeholder="Entrez votre nom" />
+            <button class="btn" id="start-quiz">Commencer</button>
+        </div>
+
+        <div id="quiz-section" style="display: none;">
+            <div class="progress">
+                <span id="progress-text">Question 1/1</span>
+            </div>
+
+            <div id="question" class="question"></div>
+            <div id="answers" class="answers"></div>
+            <p id="current-score" style="margin-top: 10px;">Score actuel : 0 / 0</p>
+            <p id="current-percentage" style="margin-top: 5px;">Pourcentage de réponses justes : 0%</p>
+            <button class="btn" id="next-button" disabled>Suivant</button>
+        </div>
+
+        <div id="result-section" style="display: none;">
+            <h2>Résultats</h2>
+            <p id="score-text"></p>
+            <button class="btn" id="download-pdf">Télécharger le PDF</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+
+        const studentNameInput = document.getElementById('student-name');
+        const startQuizButton = document.getElementById('start-quiz');
+        const quizSection = document.getElementById('quiz-section');
+        const questionElement = document.getElementById('question');
+        const answersElement = document.getElementById('answers');
+        const nextButton = document.getElementById('next-button');
+        const progressText = document.getElementById('progress-text');
+        const resultSection = document.getElementById('result-section');
+        const scoreText = document.getElementById('score-text');
+        const downloadPdfButton = document.getElementById('download-pdf');
+        const currentScoreText = document.getElementById('current-score');
+        const currentPercentageText = document.getElementById('current-percentage');
+
+        async function loadQuestions() {
+            try {
+                const response = await fetch('questions.json');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                questions = await response.json();
+            } catch (err) {
+                alert('Erreur lors du chargement des questions : ' + err.message);
+                console.error(err);
+            }
+        }
+
+        startQuizButton.addEventListener('click', async () => {
+            const studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert('Veuillez entrer votre nom.');
+                return;
+            }
+
+            await loadQuestions();
+            if (questions.length === 0) {
+                alert('Aucune question trouvée.');
+                return;
+            }
+
+            document.getElementById('student-name-section').style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            questionElement.innerHTML = questionData.question.replace(/\\n/g, '<br>');
+            answersElement.innerHTML = '';
+
+            questionData.answers.forEach((answer, index) => {
+                const button = document.createElement('div');
+                button.className = 'answer';
+                button.textContent = answer;
+                button.addEventListener('click', () => toggleAnswer(index + 1, button));
+                answersElement.appendChild(button);
+            });
+
+            progressText.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
+            nextButton.disabled = true;
+        }
+
+        function toggleAnswer(answerIndex, button) {
+            const selectedIndex = userAnswers[currentQuestionIndex] || [];
+
+            if (selectedIndex.includes(answerIndex)) {
+                const idx = selectedIndex.indexOf(answerIndex);
+                selectedIndex.splice(idx, 1);
+                button.classList.remove('selected');
+            } else {
+                selectedIndex.push(answerIndex);
+                button.classList.add('selected');
+            }
+
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            nextButton.disabled = selectedIndex.length === 0;
+        }
+
+        nextButton.addEventListener('click', () => {
+            const questionData = questions[currentQuestionIndex];
+            const selectedAnswers = userAnswers[currentQuestionIndex] || [];
+            let questionScore = 0;
+
+            selectedAnswers.forEach((answer) => {
+                if (questionData.correct.includes(answer)) {
+                    questionScore += 1;
+                } else {
+                    questionScore -= 1;
+                }
+            });
+
+            score += Math.max(0, questionScore);
+            const maxScoreForCurrentQuestions = questions
+                .slice(0, currentQuestionIndex + 1)
+                .reduce((total, question) => total + question.correct.length, 0);
+
+            currentScoreText.textContent = `Score actuel : ${score} / ${maxScoreForCurrentQuestions}`;
+            const percentage = ((score / maxScoreForCurrentQuestions) * 100).toFixed(2);
+            currentPercentageText.textContent = `Pourcentage de réponses justes : ${percentage}%`;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        function showResults() {
+            quizSection.style.display = 'none';
+            resultSection.style.display = 'block';
+
+            const maxScore = questions.reduce((total, question) => total + question.correct.length, 0);
+            const finalScore = ((score / maxScore) * 5) + 1;
+
+            scoreText.textContent = `Vous avez obtenu une note de ${finalScore.toFixed(2)} sur 6.`;
+        }
+
+        downloadPdfButton.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            const studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert('Le nom de l\'élève est requis pour générer le PDF.');
+                return;
+            }
+
+            const maxScore = questions.reduce((total, question) => total + question.correct.length, 0);
+            const finalScore = ((score / maxScore) * 5) + 1;
+
+            // Calcul de la note arrondie
+            let roundedScore = Math.floor(finalScore);
+            const fractionalPart = finalScore - Math.floor(finalScore);
+            if (fractionalPart >= 0.75) {
+                roundedScore = Math.ceil(finalScore);
+            } else if (fractionalPart >= 0.25) {
+                roundedScore = Math.floor(finalScore) + 0.5;
+            }
+
+            const correctPercentage = ((score / maxScore) * 100).toFixed(2);
+
+            // Ajout des sections
+            doc.setFontSize(22);
+            doc.setFont("Helvetica", "bold");
+            doc.text(`QCM de ${studentName}`, 10, y);
+            y += 10;
+
+            doc.setFontSize(16);
+            doc.text(`Note : ${finalScore.toFixed(2)} / 6`, 10, y);
+            y += 10;
+            doc.text(`Note arrondie : ${roundedScore.toFixed(1)} / 6`, 10, y);
+            y += 10;
+
+            doc.setFontSize(12);
+            doc.text(`Réponses correctes : ${score} / ${maxScore} (${correctPercentage}%)`, 10, y);
+            y += 10;
+            doc.text("Méthode de calcul : (Score obtenu / Score maximal) × 5 + 1", 10, y);
+            y += 20;
+
+            doc.setFontSize(12);
+            doc.text("Code couleur et soulignement :", 10, y);
+            y += 10;
+            doc.setFontSize(10);
+            doc.text("- Texte vert : Réponse correcte.", 10, y);
+            y += 5;
+            doc.text("- Texte rouge : Réponse incorrecte sélectionnée.", 10, y);
+            y += 5;
+            doc.text("- Soulignement : Réponses sélectionnées par l'élève.", 10, y);
+            y += 15;
+
+            // Ajout des questions et réponses
+            questions.forEach((question, index) => {
+                if (y > 270) {
+                    doc.addPage();
+                    y = 10;
+                }
+                doc.setFontSize(8);
+                doc.setTextColor("black");
+                const lines = doc.splitTextToSize(`${index + 1}. ${question.question.replace(/\\n/g, '\n')}`, 180);
+                doc.text(lines, 10, y);
+                y += lines.length * 4;
+
+                question.answers.forEach((answer, answerIndex) => {
+                    const isCorrect = question.correct.includes(answerIndex + 1);
+                    const isSelected = (userAnswers[index] || []).includes(answerIndex + 1);
+
+                    let textColor = "black";
+                    let underline = false;
+
+                    if (isCorrect && isSelected) {
+                        textColor = "green";
+                        underline = true;
+                    } else if (!isCorrect && isSelected) {
+                        textColor = "red";
+                        underline = true;
+                    } else if (isCorrect && !isSelected) {
+                        textColor = "green";
+                    }
+
+                    doc.setFontSize(8);
+                    doc.setTextColor(textColor);
+                    doc.text(`- ${answer}`, 20, y);
+
+                    if (underline) {
+                        const textWidth = doc.getTextWidth(`- ${answer}`);
+                        doc.line(20, y + 1, 20 + textWidth, y + 1, "S");
+                    }
+
+                    y += 5;
+
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 10;
+                    }
+                });
+
+                y += 5;
+            });
+
+            doc.save(`resultats-qcm-${studentName}.pdf`);
+        });
+    </script>
+</body>
+</html>
+N

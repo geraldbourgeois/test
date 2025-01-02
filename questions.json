@@ -1,0 +1,367 @@
+[
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Dindon était un Anglais trapu et bedonnant qui avait à peu près le même âge que moi, c'est-à-dire qu'il frisait la soixantaine. Le matin, on pouvait prêter à son visage une belle teinte vermeille, mais après la douzième heure méridienne — celle de son déjeuner — il flamboyait comme charbons dans l'âtre à Noël;\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Antithèse",
+            "Animalisation",
+            "Hyperbole",
+            "Réification",
+            "Personnification"
+        ],
+        "correct": [
+            1,
+            2,
+            7,
+            8,
+            9
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Comme Lagrinche le fit une fois observer, l'argent de Dindon passait surtout à acheter de l'encre rouge.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Antithèse",
+            "Antiphrase",
+            "Réification ou chosification",
+            "Personnification",
+            "Animalisation",
+            "Oxymore"
+        ],
+        "correct": [
+            1,
+            2,
+            9
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"En fait, tout comme on dit d'un cheval indocile et rétif qu'il sent son avoine, Dindon sentait son veston.\"",
+        "answers": [
+            "Métaphore",
+            "Antithèse",
+            "Antiphrase",
+            "Comparaison",
+            "Animalisation",
+            "Gradation",
+            "Oxymore",
+            "Réification ou chosification",
+            "Personnification",
+            "Paradoxe"
+        ],
+        "correct": [
+            1,
+            4,
+            5
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"« Sauf votre respect, monsieur, dit Dindon à cette occasion, je me considère comme votre bras droit. Le matin, je ne fais que me ranger en ordre de bataille et déployer mes colonnes; mais l'après- midi, je me mets à leur tête et je charge bravement l'ennemi... comme ceci ! ».\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Antithèse",
+            "Antiphrase",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Litote"
+        ],
+        "correct": [
+            1,
+            2,
+            8
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Mais il écrivait toujours silencieusement, lividement, machinalement.\"",
+        "answers": [
+            "Antiphrase",
+            "Répétition",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Personnification",
+            "Litote",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Assonance"
+        ],
+        "correct": [
+            4,
+            8,
+            10
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Je vois encore cette silhouette lividement propre,  pitoyablement respectable, incurablement abandonnée. C'était Bartleby.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Oxymore",
+            "Antiphrase",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Personnification",
+            "Paradoxe",
+            "Euphémisme"
+        ],
+        "correct": [
+            3,
+            4,
+            6
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Ah! Bartleby! Ah! humanité!\"",
+        "answers": [
+            "Antithèse",
+            "Interjection",
+            "Paradoxe",
+            "Réification ou chosification",
+            "Répétition",
+            "Comparaison",
+            "Énumération",
+            "Phrase non verbale",
+            "Oxymore",
+            "Parallélisme"
+        ],
+        "correct": [
+            2,
+            5,
+            8,
+            10
+        ]
+
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"« Bartleby! » Pas de réponse. « Bartleby! » dis-je en élevant la voix. Pas de réponse. « Bartleby! » tonnai-je. Tout comme un fantôme soumis aux lois de l'incantation magique, à la troisième sommation il parut à l'entrée de son ermitage.\"",
+        "answers": [
+            "Gradation",
+            "Répétition",
+            "Oxymore",
+            "Litote",
+            "Antiphrase",
+            "Hyperbole",
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Réification ou chosification"
+        ],
+        "correct": [
+            1,
+            2,
+            6,
+            7,
+            8
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Ces sombres perspectives s'offrant de plus en plus souvent à mon esprit, et mes amis ne cessant de me prodiguer leurs impitoyables remarques  sur l'apparition qui hantait mon bureau, un grand changement s'opéra en moi.\"",
+        "answers": [
+            "Antithèse",
+            "Antiphrase",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Personnification",
+            "Animalisation",
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Parallélisme"
+        ],
+        "correct": [
+            3,
+            7
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Son application, son éloignement de toute dissipation, son activité incessante (sauf lorsqu'il lui plaisait de se mettre à rêver debout derrière le paravent), sa grande tranquillité,  son comportement inaltérable en toutes circonstances  faisaient de lui une précieuse acquisition.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Antithèse",
+            "Antiphrase",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Personnification"
+        ],
+        "correct": [
+            1,
+            3,
+            8,
+            9
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Il demeura, comme toujours, l'immuable ornement de mon bureau. Plus immuable encore que devant, s'il était possible. Quel parti prendre ? Il ne voulait rien faire à l'étude : pourquoi fallait-il qu'il restât là ? Pour parler net, il était devenu comme une meule à mon cou, non seulement inutile à titre de parure, mais pénible à porter.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Antiphrase",
+            "Hyperbole",
+            "Réification ou chosification",
+            "Personnification",
+            "Chiasme",
+            "Paradoxe"
+        ],
+        "correct": [
+            1,
+            2,
+            6,
+            7
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Pareil à l'ultime colonne d'un temple en ruine, il restait debout, solitaire et muet, au milieu de la pièce déserte.\"",
+        "answers": [
+            "Antithèse",
+            "Antiphrase",
+            "Litote",
+            "Réification ou chosification",
+            "Métaphore",
+            "Comparaison",
+            "Répétition",
+            "Gradation",
+            "Oxymore",
+            "Personnification"
+        ],
+        "correct": [
+            4,
+            6
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Qu'on y songe : le dimanche, Wall Street est aussi désert que Pétra; et, chaque soir de chaque jour, c'est le vide.\"",
+        "answers": [
+            "Hyperbole",
+            "Gradation",
+            "Réification ou chosification",
+            "Personnification",
+            "Métaphore",
+            "Comparaison",
+            "Paradoxe",
+            "Mot-valise",
+            "Périphrase",
+            "Parallélisme"
+        ],
+        "correct": [
+            1,
+            6
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"C'était Bartleby. Je fus comme foudroyé. Je demeurai quelque temps immobile, pareil à cet homme qui, naguère, en Virginie, fut tué par un éclair de chaleur alors qu'il fumait sa pipe à sa fenêtre par une après-midi sans nuages, et qui resta là, penché sur l'après-midi rêveuse, jusqu'à ce qu'on l'eût touché et qu'il tombât.\"",
+        "answers": [
+            "Comparaison",
+            "Euphémisme",
+            "Métaphore",
+            "Hyperbole",
+            "Antithèse",
+            "Personnification",
+            "Chiasme",
+            "Paradoxe",
+            "Périphrase",
+            "Onomatopée"
+        ],
+        "correct": [
+            1,
+            4
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Mais il semblait que Bartleby fût seul, absolument seul au monde. Une épave au milieu de l'Atlantique.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Hyperbole",
+            "Répétition",
+            "Euphémisme",
+            "Personnification",
+            "Réification"
+        ],
+        "correct": [
+            1,
+            6,
+            7,
+            10
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Non point d'ailleurs sans quelques sursauts d'impuissante révolte  contre la suave effronterie de cet inexplicable scribe. En vérité, c'était surtout son extraordinaire suavité qui me désarmait  ou, pour mieux dire, m'émasculait.\"",
+        "answers": [
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Antithèse",
+            "Paradoxe",
+            "Parallélisme",
+            "Hyperbole",
+            "Onomatopée"
+        ],
+        "correct": [
+            1,
+            4,
+            5,
+            7,
+            9
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"Oui, ma méthode avait réussi à merveille : il semblait vraiment que Bartleby eût disparu.  Cela, pourtant, n'allait pas sans une certaine mélancolie. J'étais presque chagrin de mon brillant succès.\"",
+        "answers": [
+            "Antithèse",
+            "Antiphrase",
+            "Hyperbole",
+            "Métaphore",
+            "Comparaison",
+            "Énumération",
+            "Gradation",
+            "Paradoxe",
+            "Parallélisme",
+            "Répétition"
+        ],
+        "correct": [
+            1,
+            3,
+            8
+        ]
+    },
+    {
+        "question": "Quelles sont les figures de style dans cet  extrait : \\n  \"— Est-ce qu'il veut mourir de faim ? Si c'est ça qu'il veut, c'est facile : il n'a qu'à se contenter de l'ordinaire.\"",
+        "answers": [
+            "Métaphore",
+            "Énumération",
+            "Gradation",
+            "Oxymore",
+            "Antithèse",
+            "Antiphrase",
+            "Hyperbole",
+            "Personnification",
+            "Prolepse",
+            "Animalisation"
+        ],
+        "correct": [
+            9
+        ]
+    }
+]
