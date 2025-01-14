@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM - Figures de Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #282828;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            text-align: center;
+            color: orange;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .answer {
+            flex: 1 1 calc(50% - 10px);
+            background: #525356;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .answer:hover {
+            background: #87CEEB;
+        }
+        .answer.selected {
+            background: #87CEEB;
+            color: black;
+        }
+        .progress {
+            margin: 20px 0;
+            background: #444;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: orange;
+            width: 0;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            background: #87CEEB;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QCM de Français</h1>
+        <div id="quiz">
+            <h2 id="question-number">Question 1/10</h2>
+            <div class="question" id="question-text">Chargement...</div>
+            <div class="answers" id="answers"></div>
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="actions">
+                <button class="btn" id="prev-btn" disabled>Précédent</button>
+                <button class="btn" id="next-btn">Suivant</button>
+                <button class="btn" id="pdf-btn">Exporter en PDF</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+
+        async function loadQuestions() {
+            try {
+                const response = await fetch('questions.json');
+                questions = await response.json();
+                displayQuestion(0);
+            } catch (error) {
+                console.error('Erreur lors du chargement des questions :', error);
+            }
+        }
+
+        function displayQuestion(index) {
+            const question = questions[index];
+            document.getElementById('question-number').textContent = `Question ${index + 1}/${questions.length}`;
+            document.getElementById('question-text').textContent = question.question;
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+            question.answers.forEach((answer, i) => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer';
+                answerDiv.textContent = `${i + 1}. ${answer}`;
+                answerDiv.onclick = () => toggleAnswer(i);
+                if (userAnswers[index] && userAnswers[index].includes(i + 1)) {
+                    answerDiv.classList.add('selected');
+                }
+                answersContainer.appendChild(answerDiv);
+            });
+
+            updateProgressBar();
+        }
+
+        function toggleAnswer(answerIndex) {
+            const currentAnswers = userAnswers[currentQuestionIndex] || [];
+            const answerPosition = currentAnswers.indexOf(answerIndex + 1);
+            if (answerPosition > -1) {
+                currentAnswers.splice(answerPosition, 1);
+            } else {
+                currentAnswers.push(answerIndex + 1);
+            }
+            userAnswers[currentQuestionIndex] = currentAnswers;
+            displayQuestion(currentQuestionIndex);
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function calculateScore() {
+            let score = 0;
+            questions.forEach((question, index) => {
+                const correctAnswers = question.correct_answers;
+                const userAnswer = userAnswers[index] || [];
+                if (JSON.stringify(correctAnswers.sort()) === JSON.stringify(userAnswer.sort())) {
+                    score += 1; // Ajoutez ici le barème spécifique si nécessaire
+                }
+            });
+            return score;
+        }
+
+        function addWrappedText(doc, text, x, y, maxWidth, lineHeight, isBold = false) {
+            const words = text.split(' ');
+            let line = '';
+            words.forEach((word) => {
+                const testLine = line + word + ' ';
+                const testWidth = doc.getTextWidth(testLine);
+                if (testWidth > maxWidth) {
+                    if (isBold) doc.setFont('helvetica', 'bold');
+                    doc.text(line.trim(), x, y);
+                    line = word + ' ';
+                    y += lineHeight;
+                    if (isBold) doc.setFont('helvetica', 'normal');
+                } else {
+                    line = testLine;
+                }
+            });
+            if (line) {
+                if (isBold) doc.setFont('helvetica', 'bold');
+                doc.text(line.trim(), x, y);
+                if (isBold) doc.setFont('helvetica', 'normal');
+            }
+            return y + lineHeight;
+        }
+
+        document.getElementById('next-btn').onclick = () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+                document.getElementById('prev-btn').disabled = false;
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('next-btn').textContent = 'Terminer';
+                }
+            } else {
+                console.log('Résultats :', userAnswers);
+                alert('QCM terminé !');
+            }
+        };
+
+        document.getElementById('prev-btn').onclick = () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+                document.getElementById('next-btn').textContent = 'Suivant';
+                if (currentQuestionIndex === 0) {
+                    document.getElementById('prev-btn').disabled = true;
+                }
+            }
+        };
+
+        document.getElementById('pdf-btn').onclick = () => {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+                const score = calculateScore();
+                const totalQuestions = questions.length;
+                const note = (score / totalQuestions) * 20; // Barème sur 20
+
+                let y = 10;
+                doc.setFontSize(16);
+                doc.text(`QCM de Français - Résultats`, 10, y);
+                y += 10;
+                doc.setFontSize(14);
+                doc.text(`Score : ${score}/${totalQuestions} | Note : ${note.toFixed(2)}/20`, 10, y);
+                y += 10;
+
+                questions.forEach((question, index) => {
+                    const userAnswer = userAnswers[index] || [];
+                    const correctAnswers = question.correct_answers;
+                    const answers = question.answers;
+
+                    doc.setFontSize(12);
+                    y = addWrappedText(doc, `${index + 1}. ${question.question}`, 10, y, 190, 7);
+
+                    answers.forEach((answer, i) => {
+                        const isSelected = userAnswer.includes(i + 1);
+                        const isCorrect = correctAnswers.includes(i + 1);
+
+                        if (isCorrect) {
+                            doc.setTextColor(0, 128, 0); // Vert pour correct
+                        } else if (isSelected) {
+                            doc.setTextColor(255, 0, 0); // Rouge pour faux
+                        } else {
+                            doc.setTextColor(0,
