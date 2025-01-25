@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grille d'évaluation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Réduire les marges */
+            padding: 0; /* Réduire les marges */
+        }
+        table {
+            width: 100%;
+            margin: 3; /* Réduire les marges */
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 1px; /* Réduire le padding */
+            text-align: center;
+            font-size: 0.8em; /* Réduire la taille de la police */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .full-width {
+            width: 100%;
+            height: 80px; /* Réduire la hauteur */
+            resize: none;
+            border: none;
+            background-color: #f3f3f3;
+            font-size: 1.4em;
+            color: rgb(66, 86, 142); /* Texte des remarques en bleu */
+            overflow: hidden; /* Empêche le texte de dépasser le cadre */
+            font-size: 1.4em; /* Réduire la taille de la police */
+        }
+        .ortho-score {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            vertical-align: middle;
+            border: none;
+            font-size: 0.8em; /* Réduire la taille de la police */
+        }
+        .score-column {
+            width: 5%; /* Chaque colonne occupe 5% de la largeur totale */
+        }
+        .criteria-column {
+            width: 40%; /* Les deux premières colonnes occupent 40% chacune */
+        }
+        .ortho-cell {
+            height: 40px; /* Réduire la hauteur */
+        }
+        .remarks-cell {
+            width: 100%;
+            height: 80px;
+        }
+        .left-align {
+            text-align: left;
+        }
+        .header-text {
+            text-align: left;
+            margin-left: 0;
+        }
+        .header-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .center {
+            text-align: center;
+        }
+        .smaller-title {
+            font-size: 1.5em; /* Diminuer la taille du titre */
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        .centered-table {
+            margin: 20px auto;
+            width: 50%;
+        }
+        .centered-table th, .centered-table td {
+            width: 50%;
+        }
+        @media print {
+            body {
+                margin: 0; /* Réduire les marges pour l'impression */
+                padding: 0; /* Réduire les marges pour l'impression */
+            }
+            table {
+                width:98%;
+                margin: 0; /* Réduire les marges pour l'impression */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1 style="font-size: 1.2em;">Grille d'évaluation de la dissertation</h1>
+    </div>
+    <form id="evaluationForm">
+        <table>
+            <tr>
+                <td colspan="2" class="header-text">Nom de l'élève : <input type="text" id="studentName" name="studentName" onchange="updateStudentName()"></td>
+                <td colspan="4" class="header-text">Note sur 6 : <span id="finalNoteInTable">0</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="4" class="header-text">Total : <span id="totalScoreInTable">0</span> / 60</td>
+            </tr>
+            <tr>
+                <th class="criteria-column">Compétences</th>
+                <th class="criteria-column">Critères</th>
+                <th class="score-column">0</th>
+                <th class="score-column">1</th>
+                <th class="score-column">2</th>
+                <th class="score-column">3</th>
+            </tr>
+            <tr>
+                <td rowspan="2">Argumenter pour défendre une thèse (12 points)</td>
+                <td>Arguments pertinents, cohérents, clairs et développés (Coefficient 2)</td>
+                <td><input type="radio" name="arg1" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg1" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg1" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg1" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td>Articulation cohérente et pertinente des arguments et des exemples (Coefficient 2)</td>
+                <td><input type="radio" name="arg2" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg2" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg2" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="arg2" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="remarks-cell"><textarea name="argRemarks" class="full-width" onchange="calculateScore()">Remarques :</textarea></td>
+            </tr>
+            <tr>
+                <td rowspan="2">Exploiter des sources (12 points)</td>
+                <td>Références à/aux œuvre(s) étudiée(s) (citations pertinentes correctement référencées à l'appui) (Coefficient 2)</td>
+                <td><input type="radio" name="src1" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src1" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src1" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src1" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td>Références au dossier d'accompagnement (citations à l'appui) (Coefficient 2)</td>
+                <td><input type="radio" name="src2" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src2" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src2" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="src2" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="remarks-cell"><textarea name="srcRemarks" class="full-width" onchange="calculateScore()">Remarques :</textarea></td>
+            </tr>
+            <tr>
+                <td rowspan="3">Maîtriser la structure logique d'un propos (12 points)</td>
+                <td>Organisation des arguments et des exemples, texte suivant un fil rouge (Coefficient 2)</td>
+                <td><input type="radio" name="log1" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log1" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log1" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log1" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td>Introduction complète (amorce, problématisation, annonce plan) (Coefficient 1)</td>
+                <td><input type="radio" name="log2" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log2" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log2" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log2" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td>Conclusion complète (bilan, réponse, ouverture) (Coefficient 1)</td>
+                <td><input type="radio" name="log3" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log3" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log3" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="log3" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="remarks-cell"><textarea name="logRemarks" class="full-width" onchange="calculateScore()">Remarques :</textarea></td>
+            </tr>
+            <tr>
+                <td rowspan="1">Respecter les contraintes d'écriture argumentative (6 points)</td>
+                <td>Réponse explicite, nuancée et convaincante à la question (Coefficient 2)</td>
+                <td><input type="radio" name="con1" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="con1" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="con1" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="con1" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="remarks-cell"><textarea name="conRemarks" class="full-width" onchange="calculateScore()">Remarques :</textarea></td>
+            </tr>
+            <tr>
+                <td rowspan="4">Maîtriser les normes de la langue et la mise en forme (18 points)</td>
+                <td>Nombre de mots : <input type="number" name="wordCount" onchange="calculateScore()"></td>
+                <td rowspan="2" colspan="4" class="ortho-cell"><input type="text" name="orthoScore" class="ortho-score" readonly></td>
+            </tr>
+            <tr>
+                <td>Nombre d'erreurs : <input type="number" name="errorCount" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+                <td>Vocabulaire (Coefficient 1)</td>
+                <td><input type="radio" name="voc" value="0" onchange="calculateScore()"></td>
+                <td><input type="radio" name="voc" value="1" onchange="calculateScore()"></td>
+                <td><input type="radio" name="voc" value="2" onchange="calculateScore()"></td>
+                <td><input type="radio" name="voc" value="3" onchange="calculateScore()"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td colspan="6" class="remarks-cell"><textarea name="langRemarks" class="full-width" onchange="calculateScore()">Remarques :</textarea></td>
+            </tr>
+        </table>
+    </form>
+
+    <div class="page-break"></div>
+
+    <div class="center">
+        <h2>Barème des notes sur 3 pour chaque critère</h2>
+        <table class="centered-table">
+            <tr>
+                <th>Points</th>
+                <th>Maîtrise</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>Aucune maîtrise</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Insuffisante</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Suffisante</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Bonne</td>
+            </tr>
+        </table>
+
+        <h2>Barème des notes en orthographe</h2>
+        <table class="centered-table">
+            <tr>
+                <th>Nombre d'erreurs pour 200 mots</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <td>0-1</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>14</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>8</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>16+</td>
+                <td>0</td>
+            </tr>
+        </table>
+
+        <h2>Correspondance points / note sur 6</h2>
+        <table class="centered-table">
+            <tr>
+                <th>Points</th>
+                <th>Note sur 6</th>
+            </tr>
+            <tr>
+                <td>60-57</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>56-51</td>
+                <td>5.5</td>
+            </tr>
+            <tr>
+                <td>50-45</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>44-39</td>
+                <td>4.5</td>
+            </tr>
+            <tr>
+                <td>38-33</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>32-27</td>
+                <td>3.5</td>
+            </tr>
+            <tr>
+                <td>26-21</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>20-15</td>
+                <td>2.5</td>
+            </tr>
+            <tr>
+                <td>14-9</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>8-0</td>
+                <td>1.5</td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        function calculateScore() {
+            const form = document.getElementById('evaluationForm');
+            const wordCount = parseInt(form.wordCount.value) || 0;
+            const errorCount = parseInt(form.errorCount.value) || 0;
+
+            let total = 0;
+
+            // Calcul des points pour les arguments
+            const arg1 = parseInt(form.querySelector('input[name="arg1"]:checked')?.value) || 0;
+            const arg2 = parseInt(form.querySelector('input[name="arg2"]:checked')?.value) || 0;
+            total += (arg1 + arg2) * 2;
+
+            // Calcul des points pour les sources
+            const src1 = parseInt(form.querySelector('input[name="src1"]:checked')?.value) || 0;
+            const src2 = parseInt(form.querySelector('input[name="src2"]:checked')?.value) || 0;
+            total += (src1 + src2) * 2;
+
+            // Calcul des points pour la structure logique
+            const log1 = parseInt(form.querySelector('input[name="log1"]:checked')?.value) || 0;
+            const log2 = parseInt(form.querySelector('input[name="log2"]:checked')?.value) || 0;
+            const log3 = parseInt(form.querySelector('input[name="log3"]:checked')?.value) || 0;
+            total += (log1 * 2) + log2 + log3;
+
+            // Calcul des points pour les contraintes d'écriture
+            const con1 = parseInt(form.querySelector('input[name="con1"]:checked')?.value) || 0;
+            total += con1 * 2;
+
+            // Calcul des points pour le vocabulaire
+            const voc = parseInt(form.querySelector('input[name="voc"]:checked')?.value) || 0;
+            total += voc;
+
+            // Calcul des points pour l'orthographe
+            let orthoPoints = 0;
+            if (wordCount > 0) {
+                const adjustedErrorCount = (errorCount / wordCount) * 200;
+                if (adjustedErrorCount >= 16) {
+                    orthoPoints = 0;
+                } else if (adjustedErrorCount >= 15) {
+                    orthoPoints = 1;
+                } else if (adjustedErrorCount >= 14) {
+                    orthoPoints = 2;
+                } else if (adjustedErrorCount >= 13) {
+                    orthoPoints = 3;
+                } else if (adjustedErrorCount >= 12) {
+                    orthoPoints = 4;
+                } else if (adjustedErrorCount >= 11) {
+                    orthoPoints = 5;
+                } else if (adjustedErrorCount >= 10) {
+                    orthoPoints = 6;
+                } else if (adjustedErrorCount >= 9) {
+                    orthoPoints = 7;
+                } else if (adjustedErrorCount >= 8) {
+                    orthoPoints = 8;
+                } else if (adjustedErrorCount >= 7) {
+                    orthoPoints = 9;
+                } else if (adjustedErrorCount >= 6) {
+                    orthoPoints = 10;
+                } else if (adjustedErrorCount >= 5) {
+                    orthoPoints = 11;
+                } else if (adjustedErrorCount >= 4) {
+                    orthoPoints = 12;
+                } else if (adjustedErrorCount >= 3) {
+                    orthoPoints = 13;
+                } else if (adjustedErrorCount >= 2) {
+                    orthoPoints = 14;
+                } else {
+                    orthoPoints = 15;
+                }
+            }
+
+            total += orthoPoints;
+            form.orthoScore.value = orthoPoints;
+
+            // Calcul de la note sur 6
+            let finalNote = 0;
+            if (total >= 57) {
+                finalNote = 6;
+            } else if (total >= 51) {
+                finalNote = 5.5;
+            } else if (total >= 45) {
+                finalNote = 5;
+            } else if (total >= 39) {
+                finalNote = 4.5;
+            } else if (total >= 33) {
+                finalNote = 4;
+            } else if (total >= 27) {
+                finalNote = 3.5;
+            } else if (total >= 21) {
+                finalNote = 3;
+            } else if (total >= 15) {
+                finalNote = 2.5;
+            } else if (total >= 9) {
+                finalNote = 2;
+            } else {
+                finalNote = 1.5;
+            }
+
+            document.getElementById('totalScoreInTable').textContent = total;
+            document.getElementById('finalNoteInTable').textContent = finalNote;
+        }
+
+        function updateStudentName() {
+            const studentName = document.getElementById('studentName').value;
+            document.getElementById('studentNameInTable').textContent = studentName;
+        }
+
+        // Initial call to set default values
+        calculateScore();
+    </script>
+</body>
+</html>
